@@ -20,6 +20,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_details);
 
         this.mSecurityPreferences = new SecurityPreferences(this);
+
+        this.mViewHolder.checkParticipate = findViewById(R.id.check_participate);
         this.mViewHolder.checkParticipate.setOnClickListener(this);
         this.loadDataFromActivity();
     }

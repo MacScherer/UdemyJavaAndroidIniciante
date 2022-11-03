@@ -1,8 +1,9 @@
 package com.devmasterteam.festafimdeano.views;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,12 +14,12 @@ import com.devmasterteam.festafimdeano.util.SecurityPreferences;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ViewHolder mViewHolder = new ViewHolder();
+    private final ViewHolder mViewHolder = new ViewHolder();
     private SecurityPreferences mSecurityPreferences;
+    @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.mViewHolder.textToday.setText(SIMPLE_DATE_FORMAT.format(Calendar.getInstance().getTime()));
 
-        String daysLeft = String.format("%s %s", String.valueOf(this.getDaysLeftToEndOfYear()), getString(R.string.dias));
+        String daysLeft = String.format("%s %s", this.getDaysLeftToEndOfYear(), getString(R.string.dias));
         this.mViewHolder.textDaysLeft.setText(daysLeft);
     }
 
@@ -52,9 +53,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             String presence = this.mSecurityPreferences.getStoredString(FimDeAnoConstants.PRESENCE);
 
-            // Lógica de navegação
             Intent intent = new Intent(this, DetailsActivity.class);
-            intent.putExtra("presence_key", presence);
+
+            // intent.putExtra("presence_key", presence); // ISSUE
+
+            intent.putExtra(FimDeAnoConstants.PRESENCE, presence); // ANSWER
+            startActivity(intent);
         }
     }
 
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void verifyPresence() {
-        String presence = this.mSecurityPreferences.getStoredString("presence_Key");
+        String presence = this.mSecurityPreferences.getStoredString(FimDeAnoConstants.PRESENCE); // ANSWER
         if (presence.equals(""))
             this.mViewHolder.buttonConfirm.setText(R.string.nao_confirmado);
         else if (presence.equals(FimDeAnoConstants.CONFIRMED_WILL_GO))
